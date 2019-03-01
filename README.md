@@ -1,4 +1,4 @@
-<h1>CitationReferenceRetriever<h1>
+<h1>CitationReferenceRetriever</h1>
 
 It is a simple application that, when given a paper, retrieves information about papers that were cited in the concerning paper and also information about the papers that have referenced the concerning paper. 
 
@@ -17,6 +17,6 @@ Information about the cited/referenced papers will be in below format
 | :---: | :---: |
 |Techniques for Developing and Measuring High-Performance Web Servers over ATM Networks - 1998 |  Enhancing Web Performance - 2002 |
 
-Paper Id | Title | URL | Year | Venue | CitationVelocity | InfluentialCitationCount 
---- | --- | --- | --- |--- |--- |--- |--- 
-5db8bc966b2cd73541ae2f7a71e7d3c6ac59b9a2 | Evaluation of a just-in-time compiler retrofitted for PHP | https://www.semanticscholar.org/paper/5db8bc966b2cd73541ae2f7a71e7d3c6ac59b9a2 | 2010 | VEE | 0 | 0 
+| Paper Id | Title | URL | Year | Venue | CitationVelocity | InfluentialCitationCount |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | 
+| 5db8bc966b2cd73541ae2f7a71e7d3c6ac59b9a2 | Evaluation of a just-in-time compiler retrofitted for PHP | https://www.semanticscholar.org/paper/5db8bc966b2cd73541ae2f7a71e7d3c6ac59b9a2 | 2010 | VEE | 0 | 0 |
