@@ -2,20 +2,20 @@
 
 It is a simple application that, when given a paper, retrieves information about papers that were cited in the concerning paper and also information about the papers that have referenced the concerning paper. 
 
-<h2>How?</h2>
+<h2>How To Use?</h2>
 
 Simply put the DOIs of the papers you want to retrieve information of, inside the "doi" list as shown below:
 
-doi = ["10.1145/974036.974037", "10.1145/3175684.3175695"]
+ex: doi = ["10.1145/974036.974037", "10.1145/3175684.3175695"]
 
-
-Considering one paper eg ("10.1145/974036.974037") we will record the name and the year of the cited and referenced papers. we will also go through this list of obtained papers and find each paper's cited and refernced papers as well. The cited and referenced  information will be recorded in sepeate files for each  paper.Furthurmore, information about all the evauated papers will be writteen in a seperate file caleed "paperData". All this information can be found inside the "papers" folder which is nested inside a folder names "ResearchPapers" in your root directory. The original jason files will also be saved inside a folder named "json" which is also inside the "ReserchPapers" folder.
-
-Information about the cited/referenced papers will be in below format
+Considering a single paper, we will record the title and the year of the cited/referenced papers and also of the paper being evaluated itself. we will also go through this list of obtained papers and find each paper's cited and referenced papers as well. The cited and referenced information will be recorded in separate files for each paper. Furthermore, information about all the evaluated papers will be written in a separate file called "paperData". All this information can be found inside the "papers" folder which is nested inside a folder named "ResearchPapers" in your root directory. The original json files will also be saved inside a folder named "json" which is also nested inside the "ReserchPapers" folder.
+Information about the cited/referenced papers (paper_<paper_id>_CitedReferenced.csv) will be in the following format:
 
 | Paper | Cited Paper|
 | :---: | :---: |
 |Techniques for Developing and Measuring High-Performance Web Servers over ATM Networks - 1998 |  Enhancing Web Performance - 2002 |
+
+Information about the evaluated papers (paperData.csv) will be in the following format:
 
 | Paper Id | Title | URL | Year | Venue | CitationVelocity | InfluentialCitationCount |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | 
