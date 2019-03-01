@@ -2,6 +2,8 @@
 
 It is a simple application that, when given a paper, retrieves information about papers that were cited in the concerning paper and also information about the papers that have referenced the concerning paper. This was done using the [semanticscholar API](http://api.semanticscholar.org/).
 
+Considering a single paper, we will record the title and the year of the cited/referenced papers and also of the paper being evaluated itself. we will also go through this list of obtained papers and find each paper's cited and referenced papers as well. The cited and referenced information will be recorded in separate files for each paper. Furthermore, information about all the evaluated papers will be written in a separate file called "paperData". All this information can be found inside the "papers" folder which is nested inside a folder named "ResearchPapers" in your root directory. The original json files will also be saved inside a folder named "json" which is also nested inside the "ReserchPapers" folder.
+
 <h2>Dependencies</h2>
 
 Before running this code you need to install the [Requests package](https://pypi.org/project/requests/) into your machine or IDE. 
@@ -12,7 +14,7 @@ Simply put the DOIs of the papers you want to retrieve information of, inside th
 
 ex: doi = ["10.1145/974036.974037", "10.1145/3175684.3175695"]
 
-Considering a single paper, we will record the title and the year of the cited/referenced papers and also of the paper being evaluated itself. we will also go through this list of obtained papers and find each paper's cited and referenced papers as well. The cited and referenced information will be recorded in separate files for each paper. Furthermore, information about all the evaluated papers will be written in a separate file called "paperData". All this information can be found inside the "papers" folder which is nested inside a folder named "ResearchPapers" in your root directory. The original json files will also be saved inside a folder named "json" which is also nested inside the "ReserchPapers" folder.
+<h2>Data Representation</h2>
 
 Information about the cited/referenced papers (paper_<paper_id>_CitedReferenced.csv) will be in the following format:
 
