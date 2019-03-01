@@ -1,4 +1,4 @@
-jason# CitationReferenceRetriever
+<h1>CitationReferenceRetriever<h1>
 
 It is a simple application that, when given a paper, retrieves information about papers that were cited in the concerning paper and also information about the papers that have referenced the concerning paper. 
 
@@ -13,9 +13,9 @@ Considering one paper eg ("10.1145/974036.974037") we will record the name and t
 
 Information about the cited/referenced papers will be in below format
 
-Paper | Cited Paper 
---- | --- | --- 
-Techniques for Developing and Measuring High-Performance Web Servers over ATM Networks - 1998 |  Enhancing Web Performance - 2002
+| Paper | Cited Paper|
+| :---: | :---: |
+|Techniques for Developing and Measuring High-Performance Web Servers over ATM Networks - 1998 |  Enhancing Web Performance - 2002 |
 
 Paper Id | Title | URL | Year | Venue | CitationVelocity | InfluentialCitationCount 
 --- | --- | --- | --- |--- |--- |--- |--- 
