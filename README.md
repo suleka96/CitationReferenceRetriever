@@ -2,6 +2,10 @@
 
 It is a simple application that, when given a paper, retrieves information about papers that were cited in the concerning paper and also information about the papers that have referenced the concerning paper. This was done using the [semanticscholar API](http://api.semanticscholar.org/).
 
+<h2>Dependencies</h2>
+
+Before running this code you need to install the [Requests package](https://pypi.org/project/requests/) into your machine or IDE. 
+
 <h2>How To Use?</h2>
 
 Simply put the DOIs of the papers you want to retrieve information of, inside the "doi" list as shown below:
