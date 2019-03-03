@@ -4,6 +4,8 @@ It is a simple application that, when given a paper, retrieves information about
 
 Considering a single paper, we will record the title and the year of the cited/referenced papers and also of the paper being evaluated itself. we will also go through this list of obtained papers and find each paper's cited and referenced papers as well. The cited and referenced information will be recorded in separate files for each paper. Furthermore, information about all the evaluated papers will be written in a separate file called "paperData". All this information can be found inside the "papers" folder which is nested inside a folder named "ResearchPapers" in your root directory. The original json files will also be saved inside a folder named "json" which is also nested inside the "ReserchPapers" folder.
 
+<b>Note:</b> This program was made using Python version: 3.6.5
+
 <h2>Dependencies</h2>
 
 Before running this code you need to install the [Requests package](https://pypi.org/project/requests/) into your machine or IDE. 
