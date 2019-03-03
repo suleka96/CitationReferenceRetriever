@@ -2,6 +2,7 @@ import requests
 import json
 import csv
 import os
+import platform
 
 
 #global variables
@@ -14,14 +15,14 @@ filePath = None
 def write_paperInfo(paperId,title,url,year,venue,citationVelocity,influentialCitationCount):
 
     paperInfoPath = '{}{}'.format(filePath,"/papers/paperData.csv")
-    with open(paperInfoPath, "a") as f:
+    with open(paperInfoPath, "a", errors='replace') as f:
         writer = csv.writer(f)
         writer.writerows(
             zip([paperId], [title], [url], [year], [venue],
                 [citationVelocity], [influentialCitationCount]))
 
 def write_citedReferencedInfo(fileName,paper,citedPaper):
-    with open(fileName, "a") as f:
+    with open(fileName, "a", errors='replace') as f:
         writer = csv.writer(f)
         writer.writerows(
             zip([paper], [citedPaper]))
@@ -30,19 +31,32 @@ def createDirectries():
 
     global filePath
 
-    filePath = os.path.expanduser('~/ResearchPapers')
+    current_os =  platform.system()
+
+    if current_os == 'Linux' or current_os == 'Darwin':
+        filePath = os.path.expanduser('~/ResearchPapers')
+    if current_os == 'Windows':
+        filePath = os.path.expanduser('~\ResearchPapers')
 
     if not os.path.exists(filePath):
         print("path doesn't exist. creating..")
         os.makedirs(filePath)
 
-    paperFilePath = os.path.expanduser('~/ResearchPapers/papers')
+    if current_os == 'Linux' or current_os == 'Darwin' :
+        paperFilePath = os.path.expanduser('~/ResearchPapers/papers')
+    if current_os == 'Windows':
+        paperFilePath = os.path.expanduser('~\ResearchPapers\papers')
+
 
     if not os.path.exists(paperFilePath):
         print("path doesn't exist. creating..")
         os.makedirs(paperFilePath)
 
-    jsonFilePath = os.path.expanduser('~/ResearchPapers/json')
+    if current_os == 'Linux' or current_os == 'Darwin':
+        jsonFilePath = os.path.expanduser('~/ResearchPapers/json')
+    if current_os == 'Windows':
+        jsonFilePath = os.path.expanduser('~\ResearchPapers\json')
+
 
     if not os.path.exists(jsonFilePath):
         print("path doesn't exist. creating..")
@@ -111,6 +125,7 @@ def getInfo(doi_id):
                     citedPaper_name_year = citation_title + " - " + str(citation_year)
 
                     write_citedReferencedInfo(fileName_cited_referenced_graph, paper_name_year, citedPaper_name_year)
+
 
             references = response_native.get('references')
             for reference in references:
