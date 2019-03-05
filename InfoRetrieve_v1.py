@@ -35,7 +35,7 @@ def createDirectries():
 
     if current_os == 'Linux' or current_os == 'Darwin':
         filePath = os.path.expanduser('~/ResearchPapers')
-    if current_os == 'Windows':
+    elif current_os == 'Windows':
         filePath = os.path.expanduser('~\ResearchPapers')
 
     if not os.path.exists(filePath):
@@ -44,7 +44,7 @@ def createDirectries():
 
     if current_os == 'Linux' or current_os == 'Darwin' :
         paperFilePath = os.path.expanduser('~/ResearchPapers/papers')
-    if current_os == 'Windows':
+    elif current_os == 'Windows':
         paperFilePath = os.path.expanduser('~\ResearchPapers\papers')
 
 
@@ -54,7 +54,7 @@ def createDirectries():
 
     if current_os == 'Linux' or current_os == 'Darwin':
         jsonFilePath = os.path.expanduser('~/ResearchPapers/json')
-    if current_os == 'Windows':
+    elif current_os == 'Windows':
         jsonFilePath = os.path.expanduser('~\ResearchPapers\json')
 
 
