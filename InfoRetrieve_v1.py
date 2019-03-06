@@ -159,7 +159,19 @@ if __name__ == '__main__':
 
     write_paperInfo("Paper Id","Title","URL","Year","Venue","CitationVelocity","InfluentialCitationCount")
 
-    #insert all DOIs into the list
-    doi = ["10.1145/974036.974037", "10.1145/3175684.3175695"]
+    doi = []
+
+    print("\n"+"*********************************"+ "\n")
+    print("To enter DOIs, type in the DOI and press 'Enter'." + "\n"
+          "Reapeat process and when done, simply press the 'Enter' key again."+ "\n")
+    print("*********************************" + "\n")
+    print( "Enter DOIs" )
+
+    while True:
+        line = input()
+        if not line: break
+        doi.append(line)
+
+    print("Retrieving Information... ")
 
     getInfo(doi)
