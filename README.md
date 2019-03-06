@@ -12,9 +12,9 @@ Before running this code you need to install the [Requests package](https://pypi
 
 <h2>How To Use?</h2>
 
-Simply put the DOIs of the papers you want to retrieve information of, inside the "doi" list as shown below:
+Simply run the program and enter the DOIs of the papers you want to retrieve information of:
 
-ex: doi = ["10.1145/974036.974037", "10.1145/3175684.3175695"]
+
 
 <h2>Data Representation</h2>
 
