@@ -12,14 +12,14 @@ citedReferencedPapers = {}
 filePath = None
 
 
-def write_paperInfo(paperId,title,url,year,venue,citationVelocity,influentialCitationCount):
+def write_paperInfo(paperId,title,url,year,venue,citationVelocity,influentialCitationCount,citation_count):
 
     paperInfoPath = '{}{}'.format(filePath,"/papers/paperData.csv")
     with open(paperInfoPath, "a", errors='replace') as f:
         writer = csv.writer(f)
         writer.writerows(
             zip([paperId], [title], [url], [year], [venue],
-                [citationVelocity], [influentialCitationCount]))
+                [citationVelocity], [influentialCitationCount], [citation_count]))
 
 def write_citedReferencedInfo(fileName,paper,citedPaper):
     with open(fileName, "a", errors='replace') as f:
@@ -56,6 +56,7 @@ def createDirectries():
         jsonFilePath = os.path.expanduser('~/ResearchPapers/json')
     elif current_os == 'Windows':
         jsonFilePath = os.path.expanduser('~\ResearchPapers\json')
+
 
 
     if not os.path.exists(jsonFilePath):
@@ -99,14 +100,13 @@ def getInfo(doi_id):
             fileName_cited_referenced_graph = '{}{}{}{}{}'.format(filePath,"/papers/paper_", id, "_CitedReferenced", ".csv")
             fileName_json = '{}{}{}{}'.format(filePath,"/json/paper_", id, ".json")
 
-            write_paperInfo(id,title,url,year,venue,citationVelocity,influentialCitationCount)
 
             write_citedReferencedInfo(fileName_cited_referenced_graph,"Paper","Cited Paper")
 
             with open(fileName_json, 'w') as outfile:
                 json.dump(response_native, outfile)
 
-
+            citation_count = 0
             citations = response_native.get('citations')
             for citation in citations:
                 citation_id = citation.get('paperId')
@@ -115,6 +115,8 @@ def getInfo(doi_id):
                     continue
 
                 else:
+                    citation_count += 1
+
                     citation_title = citation.get('title')
                     citation_year = citation.get('year')
 
@@ -126,6 +128,7 @@ def getInfo(doi_id):
 
                     write_citedReferencedInfo(fileName_cited_referenced_graph, paper_name_year, citedPaper_name_year)
 
+            write_paperInfo(id, title, url, year, venue, citationVelocity, influentialCitationCount,citation_count)
 
             references = response_native.get('references')
             for reference in references:
@@ -154,7 +157,7 @@ def getInfo(doi_id):
 
 
 if __name__ == '__main__':
-    
+
     print("\n")
     print("  / ____(_) |      | | (_)             |  __ \    | |          (_)               ")
     print(" | |     _| |_ __ _| |_ _  ___  _ __   | |__) |___| |_ _ __ ___ ___   _____ _ __ ")
@@ -165,7 +168,7 @@ if __name__ == '__main__':
 
     createDirectries()
 
-    write_paperInfo("Paper Id","Title","URL","Year","Venue","CitationVelocity","InfluentialCitationCount")
+    write_paperInfo("Paper Id","Title","URL","Year","Venue","CitationVelocity","InfluentialCitationCount","TotalCitationCount")
 
     doi = []
 
