@@ -14,7 +14,7 @@ Before running this code you need to install the [Requests package](https://pypi
 
 Simply run the program and enter the DOIs of the papers you want to retrieve information of:
 
-![picture](https://github.com/suleka96/CitationReferenceRetriever/blob/master/cite.png)
+![picture](images/cite.png)
 
 <h2>Data Representation</h2>
 
