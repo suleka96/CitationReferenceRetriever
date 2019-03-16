@@ -26,6 +26,6 @@ Information about all the cited/referenced papers (citedReferenced.csv) will be 
 
 Information about the evaluated papers (paperData.csv) will be in the following format:
 
-| Paper Id | Title | URL | Year | Venue | CitationVelocity | InfluentialCitationCount |TotalCitationCount |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | 
-| 5db8bc966b2cd73541ae2f7a71e7d3c6ac59b9a2 | Evaluation of a just-in-time compiler retrofitted for PHP | https://www.semanticscholar.org/paper/5db8bc966b2cd73541ae2f7a71e7d3c6ac59b9a2 | 2010 | VEE | 0 | 0 | 5 |
+| Paper Id | Title | URL | Year | Venue | CitationVelocity | InfluentialCitationCount | TotalCitationCount | Cited Papers |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | 
+| 5db8bc966b2cd73541ae2f7a71e7d3c6ac59b9a2 | Evaluation of a just-in-time compiler retrofitted for PHP | https://www.semanticscholar.org/paper/5db8bc966b2cd73541ae2f7a71e7d3c6ac59b9a2 | 2010 | VEE | 0 | 0 | 5 | 23 |
