@@ -3,34 +3,41 @@ import json
 import csv
 import os
 import platform
-
+import pandas as pd
+import itertools
+import re
 
 #global variables
 repeat = True
 all_papers = {}
 citedReferencedPapers = {}
 filePath = None
+fileName_cited_referenced_graph = None
+paperInfoPath = None
 
 
 def write_paperInfo(paperId,title,url,year,venue,citationVelocity,influentialCitationCount,citation_count):
 
+    global paperInfoPath
     paperInfoPath = '{}{}'.format(filePath,"/papers/paperData.csv")
-    with open(paperInfoPath, "a", errors='replace') as f:
+    with open(paperInfoPath, "a", errors='replace',encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerows(
             zip([paperId], [title], [url], [year], [venue],
                 [citationVelocity], [influentialCitationCount], [citation_count]))
 
 def write_citedReferencedInfo(paper,citedPaper):
+
+    global fileName_cited_referenced_graph
     fileName_cited_referenced_graph = '{}{}'.format(filePath, "/papers/citedReferenced.csv")
-    with open(fileName_cited_referenced_graph, "a", errors='replace') as f:
+    with open(fileName_cited_referenced_graph, "a", errors='replace',encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerows(
             zip([paper], [citedPaper]))
 
 def createDirectries():
 
-    global filePath
+    global filePath, fileName_cited_referenced_graph, paperInfoPath
 
     current_os =  platform.system()
 
@@ -97,7 +104,7 @@ def getInfo(doi_id):
                 citationVelocity = response_native.get('citationVelocity')
                 influentialCitationCount = response_native.get('influentialCitationCount')
 
-                paper_id_year = id + " - " + str(year)
+                paper_id_year = id + "-" + str(year)
 
                 all_papers[id]= title
 
@@ -124,7 +131,7 @@ def getInfo(doi_id):
 
                         temp_paper_list.append(citation_id)
 
-                        citedPaper_id_year = citation_id + " - " + str(citation_year)
+                        citedPaper_id_year = citation_id + "-" + str(citation_year)
 
                         write_citedReferencedInfo(paper_id_year, citedPaper_id_year)
 
@@ -146,7 +153,7 @@ def getInfo(doi_id):
 
                         temp_paper_list.append(reference_id)
 
-                        referencedPaper_id_year = reference_id + " - " + str(reference_year)
+                        referencedPaper_id_year = reference_id + "-" + str(reference_year)
 
                         write_citedReferencedInfo(referencedPaper_id_year, paper_id_year)
 
@@ -157,12 +164,42 @@ def getInfo(doi_id):
                     getInfo(temp_paper_list)
                     repeat = True
 
+def addCitedPapers():
+
+    # isolating id value
+    df_original = pd.read_csv(fileName_cited_referenced_graph)
+    for index, row in df_original.iterrows():
+        temp_val = df_original.loc[index, 'Papers']
+        split_list = temp_val.split("-")
+        id = re.sub(r"\s+$", "", split_list[0], flags=re.UNICODE)
+        df_original.loc[index, 'Papers'] = id
+
+    # grouping
+    temp_citedReferenced = df_original.groupby(['Papers'], sort=False).count()
+
+    temp_paperInfo = pd.read_csv(paperInfoPath)
+
+    new_data = pd.merge(temp_paperInfo, temp_citedReferenced, how='left', left_on="Paper Id",
+                        right_index=True, sort=False)
+
+    # replace nan with 0
+    new_data['Cited Papers'] = new_data['Cited Papers'].fillna(0)
+
+    # convert to int
+    new_data['Cited Papers'] = new_data['Cited Papers'].astype(int)
+
+    os.remove(paperInfoPath)
+
+    new_data.to_csv(paperInfoPath, sep='\t', encoding='utf-8')
+
+    print("Done")
+
 
 if __name__ == '__main__':
 
     print("\n")
     print("  / ____(_) |      | | (_)             |  __ \    | |          (_)               ")
-    print(" | |     _| |_ __ _| |_ _  ___  _ __   | |__) |___| |_ _ __ ___ ___   _____ _ __ ")
+    print(" | |     _| |_ __ _| |_ _  ___  _ __   | |__) |___| |__ __ ___ ___   _____ _ __ ")
     print(" | |    | | __/ _` | __| |/ _ \| '_ \  |  _  // _ \ __| '__/ _ \ \ \ / / _ \ '__|")
     print(" | |____| | || (_| | |_| | (_) | | | | | | \ \  __/ |_| | |  __/ |\ V /  __/ |   ")
     print("  \_____|_|\__\__,_|\__|_|\___/|_| |_| |_|  \_\___|\__|_|  \___|_| \_/ \___|_|   ")
@@ -171,7 +208,7 @@ if __name__ == '__main__':
     createDirectries()
 
     write_paperInfo("Paper Id","Title","URL","Year","Venue","CitationVelocity","InfluentialCitationCount","TotalCitationCount")
-    write_citedReferencedInfo("Paper", "Cited Paper")
+    write_citedReferencedInfo("Papers", "Cited Papers")
 
     doi = []
 
@@ -187,4 +224,4 @@ if __name__ == '__main__':
     print("Retrieving Information... ")
 
     getInfo(doi)
-
+    addCitedPapers()
