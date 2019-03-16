@@ -4,7 +4,6 @@ import csv
 import os
 import platform
 import pandas as pd
-import itertools
 import re
 
 #global variables
