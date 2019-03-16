@@ -8,11 +8,21 @@ Considering a single paper, we will record the paper id and the year of the cite
 
 <h2>Dependencies</h2>
 
-Before running this code you need to install the [Requests package](https://pypi.org/project/requests/) into your machine or IDE. 
+* [Requests package](https://pypi.org/project/requests/)
+
+* [Pandas](https://pandas.pydata.org/pandas-docs/stable/install.html)
 
 <h2>How To Use?</h2>
 
-Simply run the program and enter the DOIs of the papers you want to retrieve information of:
+1. Download python (version 3 or higher)
+
+2. Clone the project
+
+3. Execute the "requirements.txt" file to install the dependencies with the command shown below:
+````````````````````````````````````
+pip install -r requirements.txt
+````````````````````````````````````
+4. Run the programe and enter DOIs of the papers when prompted
 
 ![picture](images/cite.png)
 
