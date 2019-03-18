@@ -5,6 +5,7 @@ import os
 import platform
 import pandas as pd
 import re
+import shutil
 
 #global variables
 repeat = True
@@ -45,9 +46,14 @@ def createDirectries():
     elif current_os == 'Windows':
         filePath = os.path.expanduser('~\ResearchPapers')
 
+    if os.path.exists(filePath):
+        print("deleting existing directory")
+        shutil.rmtree(filePath)
+
     if not os.path.exists(filePath):
         print("path doesn't exist. creating..")
         os.makedirs(filePath)
+
 
     if current_os == 'Linux' or current_os == 'Darwin' :
         paperFilePath = os.path.expanduser('~/ResearchPapers/papers')
