@@ -14,6 +14,7 @@ citedReferencedPapers = {}
 filePath = None
 fileName_cited_referenced_graph = None
 paperInfoPath = None
+level = 0
 
 
 def write_paperInfo(paperId,title,url,year,venue,citationVelocity,influentialCitationCount,citation_count):
@@ -82,26 +83,25 @@ def createDirectries():
 
 def getInfo(doi_id):
 
-    global repeat
+    global repeat,level
 
     for entry in doi_id:
 
-        temp_paper_list = []
-
-        url = '{}{}'.format("http://api.semanticscholar.org/v1/paper/", entry)
-        response = requests.get(url)
-        response_native = json.loads(response.text)
-
-        if response_native.get('error') == "Paper not found":
+        if entry in all_papers:
             continue
+
         else:
-            id = response_native.get('paperId')
 
-            if id in all_papers:
+            temp_paper_list = []
+
+            url = '{}{}'.format("http://api.semanticscholar.org/v1/paper/", entry)
+            response = requests.get(url)
+            response_native = json.loads(response.text)
+
+            if response_native.get('error') == "Paper not found":
                 continue
-
             else:
-
+                id = response_native.get('paperId')
                 title = response_native.get('title')
                 url = response_native.get('url')
                 year = response_native.get('year')
@@ -111,9 +111,9 @@ def getInfo(doi_id):
 
                 paper_id_year = id + "-" + str(year)
 
-                all_papers[id]= title
+                all_papers[id] = title
 
-                fileName_json = '{}{}{}{}'.format(filePath,"/json/paper_", id, ".json")
+                fileName_json = '{}{}{}{}'.format(filePath, "/json/paper_", id, ".json")
 
                 with open(fileName_json, 'w') as outfile:
                     json.dump(response_native, outfile)
@@ -140,7 +140,7 @@ def getInfo(doi_id):
 
                         write_citedReferencedInfo(paper_id_year, citedPaper_id_year)
 
-                write_paperInfo(id, title, url, year, venue, citationVelocity, influentialCitationCount,citation_count)
+                write_paperInfo(id, title, url, year, venue, citationVelocity, influentialCitationCount, citation_count)
 
                 references = response_native.get('references')
                 for reference in references:
@@ -164,10 +164,21 @@ def getInfo(doi_id):
 
                 print("Retrieved Information of: " + title)
 
+
                 if repeat:
-                    repeat = False
-                    getInfo(temp_paper_list)
-                    repeat = True
+                    level += 1
+                    if level == 2:
+                        repeat = False
+                        getInfo(temp_paper_list)
+                        repeat = True
+                        level -= 1
+                    else:
+                        getInfo(temp_paper_list)
+                        level -= 1
+
+
+
+
 
 def addCitedPapers():
 
