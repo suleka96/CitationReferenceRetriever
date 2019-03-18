@@ -10,7 +10,6 @@ import shutil
 #global variables
 repeat = True
 all_papers = {}
-citedReferencedPapers = {}
 filePath = None
 fileName_cited_referenced_graph = None
 paperInfoPath = None
@@ -121,46 +120,34 @@ def getInfo(doi_id):
                 citation_count = 0
                 citations = response_native.get('citations')
                 for citation in citations:
+
                     citation_id = citation.get('paperId')
 
-                    if citation_id in citedReferencedPapers:
-                        continue
+                    citation_count += 1
 
-                    else:
-                        citation_count += 1
+                    citation_year = citation.get('year')
 
-                        citation_title = citation.get('title')
-                        citation_year = citation.get('year')
+                    temp_paper_list.append(citation_id)
 
-                        citedReferencedPapers[citation_id] = citation_title
+                    citedPaper_id_year = citation_id + "-" + str(citation_year)
 
-                        temp_paper_list.append(citation_id)
-
-                        citedPaper_id_year = citation_id + "-" + str(citation_year)
-
-                        write_citedReferencedInfo(paper_id_year, citedPaper_id_year)
+                    write_citedReferencedInfo(paper_id_year, citedPaper_id_year)
 
                 write_paperInfo(id, title, url, year, venue, citationVelocity, influentialCitationCount, citation_count)
 
                 references = response_native.get('references')
+
                 for reference in references:
+
                     reference_id = reference.get('paperId')
 
-                    if reference_id in citedReferencedPapers:
-                        continue
+                    reference_year = reference.get('year')
 
-                    else:
+                    temp_paper_list.append(reference_id)
 
-                        reference_title = reference.get('title')
-                        reference_year = reference.get('year')
+                    referencedPaper_id_year = reference_id + "-" + str(reference_year)
 
-                        citedReferencedPapers[reference_id] = reference_title
-
-                        temp_paper_list.append(reference_id)
-
-                        referencedPaper_id_year = reference_id + "-" + str(reference_year)
-
-                        write_citedReferencedInfo(referencedPaper_id_year, paper_id_year)
+                    write_citedReferencedInfo(referencedPaper_id_year, paper_id_year)
 
                 print("Retrieved Information of: " + title)
 
@@ -175,10 +162,6 @@ def getInfo(doi_id):
                     else:
                         getInfo(temp_paper_list)
                         level -= 1
-
-
-
-
 
 def addCitedPapers():
 
@@ -214,6 +197,7 @@ def addCitedPapers():
 if __name__ == '__main__':
 
     print("\n")
+    print("   _____ _ _        _   _               _____      _            _                ")
     print("  / ____(_) |      | | (_)             |  __ \    | |          (_)               ")
     print(" | |     _| |_ __ _| |_ _  ___  _ __   | |__) |___| |__ __ ___ ___   _____ _ __ ")
     print(" | |    | | __/ _` | __| |/ _ \| '_ \  |  _  // _ \ __| '__/ _ \ \ \ / / _ \ '__|")
