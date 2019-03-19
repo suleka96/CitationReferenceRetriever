@@ -6,6 +6,8 @@ import platform
 import pandas as pd
 import re
 import shutil
+import sys
+
 
 #global variables
 repeat = True
@@ -39,12 +41,14 @@ def createDirectries():
 
     global filePath, fileName_cited_referenced_graph, paperInfoPath
 
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+
     current_os =  platform.system()
 
     if current_os == 'Linux' or current_os == 'Darwin':
-        filePath = os.path.expanduser('~/ResearchPapers')
+        filePath = dirPath+'/ResearchPapers'
     elif current_os == 'Windows':
-        filePath = os.path.expanduser('~\ResearchPapers')
+        filePath = dirPath+'\ResearchPapers'
 
     if os.path.exists(filePath):
         print("deleting existing directory")
@@ -56,9 +60,9 @@ def createDirectries():
 
 
     if current_os == 'Linux' or current_os == 'Darwin' :
-        paperFilePath = os.path.expanduser('~/ResearchPapers/papers')
+        paperFilePath = dirPath+'/ResearchPapers/papers'
     elif current_os == 'Windows':
-        paperFilePath = os.path.expanduser('~\ResearchPapers\papers')
+        paperFilePath = dirPath+'\ResearchPapers\papers'
 
 
     if not os.path.exists(paperFilePath):
@@ -66,9 +70,9 @@ def createDirectries():
         os.makedirs(paperFilePath)
 
     if current_os == 'Linux' or current_os == 'Darwin':
-        jsonFilePath = os.path.expanduser('~/ResearchPapers/json')
+        jsonFilePath = dirPath+'/ResearchPapers/json'
     elif current_os == 'Windows':
-        jsonFilePath = os.path.expanduser('~\ResearchPapers\json')
+        jsonFilePath = dirPath+'\ResearchPapers\json'
 
 
 
@@ -98,6 +102,7 @@ def getInfo(doi_id):
             response_native = json.loads(response.text)
 
             if response_native.get('error') == "Paper not found":
+                print("Paper not found. This can be due to a wrong input.")
                 continue
             else:
                 id = response_native.get('paperId')
@@ -108,7 +113,7 @@ def getInfo(doi_id):
                 citationVelocity = response_native.get('citationVelocity')
                 influentialCitationCount = response_native.get('influentialCitationCount')
 
-                paper_id_year = id + "-" + str(year)
+                paper_id_year = str(id) + "-" + str(year)
 
                 all_papers[id] = title
 
@@ -129,7 +134,7 @@ def getInfo(doi_id):
 
                     temp_paper_list.append(citation_id)
 
-                    citedPaper_id_year = citation_id + "-" + str(citation_year)
+                    citedPaper_id_year = str(citation_id) + "-" + str(citation_year)
 
                     write_citedReferencedInfo(paper_id_year, citedPaper_id_year)
 
@@ -145,7 +150,7 @@ def getInfo(doi_id):
 
                     temp_paper_list.append(reference_id)
 
-                    referencedPaper_id_year = reference_id + "-" + str(reference_year)
+                    referencedPaper_id_year = str(reference_id) + "-" + str(reference_year)
 
                     write_citedReferencedInfo(referencedPaper_id_year, paper_id_year)
 
@@ -220,8 +225,6 @@ if __name__ == '__main__':
     input = input("Please enter DOIs: ")
 
     doi = [i for i in input.split()]
-
-    print("Retrieving Information... ")
 
     getInfo(doi)
     addCitedPapers()
