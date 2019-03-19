@@ -1,16 +1,65 @@
 <h1>CitationReferenceRetriever</h1>
 
-It is a simple application that, when given a paper, retrieves information about papers that were cited in the concerning paper and also information about the papers that have referenced the concerning paper. This was done using the [semanticscholar API](http://api.semanticscholar.org/).
+A simple application that, when given a paper, retrieves information about papers that cited the concerning paper and also information about the papers that were referenced by the concerning paper. This was done using the [semanticscholar API](http://api.semanticscholar.org/).
 
-Considering a single paper, we will record the paper id and the year of the cited/referenced papers and also of the paper being evaluated itself. we will also go through this list of obtained cited/referenced papers and recursively find each paper's cited and referenced papers as well. The cited and referenced information will be recorded in a separate file called "citedReferenced.csv". Furthermore, information about all the evaluated papers will be written in another separate file called "paperData". All this information can be found inside the "papers" folder which is nested inside a folder named "ResearchPapers" in your root directory. The original json files will also be saved inside a folder named "json" which is also nested inside the "ReserchPapers" folder.
+You can retrieve citation/reference information of a paper using its:
+1. DOI or
+2. ArXivId or
+3. S2PaperId
 
-<b>Note:</b> This program was made using Python version: 3.6.5
+Considering one given paper, the application will retrieve papers that have cited this paper and the papers it refers to. We also go one step further to retrieve the citations and references of each cited and referenced paper that was initially obtained. 
+
+Using this information we will be creating 2 different csv files as:
+1.citedReferenced.csv
+2.paperData.csv
+
+The paperData.csv contains information about the:
+1. Base paper
+2. The cited and referenced papers of the base paper
+3. The cited and referenced papers of each initially cited/referenced papers
+
+The information that paperData.csv contains are:
+1. paper id (given by semantic scholar)
+2. Title
+3. URL
+4. Year
+5. Venue
+6. Citation velocity
+7. Influential citation count
+8. Total citation count
+9. Cited papers (the number of cited papers from all the retrieved papers)
+
+The citedReferenced.csv is the citation graph. It contains the paper id and year of each paper and the paper id and year of the paper that it is cited in.
+
+The retrieved json files will also be saved in a separate folder.
+
+<h2>Folder Structure</h2>
+
+The ResearchPapers folder will be created in your root directory.
+
+````````````````````````````````````
+|-- ResearchPapers
+|   |-- json
+|   |-- papers
+|   |   |-- paperData.csv
+|   |   |-- citedReferenced.csv
+
+````````````````````````````````````
+
+
+For further clarifications refer:
+
+![picture](images/info.jpg)
+
+<b>Note:</b> The citations and references in level 'C' will not be added to the 'paperData.csv' file but they will be recorded in the citation graph (citedReferenced.csv).
 
 <h2>Dependencies</h2>
 
 * [Requests package](https://pypi.org/project/requests/)
 
 * [Pandas](https://pandas.pydata.org/pandas-docs/stable/install.html)
+
+<b>Note:</b> This program was made using Python version: 3.6.5
 
 <h2>How To Use?</h2>
 
