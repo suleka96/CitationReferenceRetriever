@@ -10,7 +10,7 @@ You can retrieve citation/reference information of a paper using its:
 Considering one given paper, the application will retrieve papers that have cited this paper and the papers it refers to. We also go one step further to retrieve the citations and references of each cited and referenced paper that was initially obtained. 
 
 Using this information we will be creating 2 different csv files as:<br>
-1.citedReferenced.csv
+1.citedReferenced.csv<br>
 2.paperData.csv
 
 The paperData.csv contains information about the:
