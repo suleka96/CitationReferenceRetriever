@@ -1,6 +1,6 @@
 <h1>CitationReferenceRetriever</h1>
 
-A simple application that, when given a paper, retrieves information about papers that cited the concerning paper and also information about the papers that were referenced by the concerning paper. This was done using the [semanticscholar API](http://api.semanticscholar.org/).
+A console based application that, when given a paper, retrieves information about papers that cited the concerning paper and also information about the papers that were referenced by the concerning paper. This was done using the [semanticscholar API](http://api.semanticscholar.org/).
 
 You can retrieve citation/reference information of a paper using its:
 1. DOI or
