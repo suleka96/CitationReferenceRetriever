@@ -35,7 +35,7 @@ The retrieved json files will also be saved in a separate folder.
 
 <h2>Folder Structure</h2>
 
-The ResearchPapers folder will be created in your root directory.
+The ResearchPapers folder will be created in your working directory.
 
 ````````````````````````````````````
 |-- ResearchPapers
