@@ -6,7 +6,6 @@ import platform
 import pandas as pd
 import re
 import shutil
-import sys
 
 
 #global variables
@@ -16,12 +15,12 @@ filePath = None
 fileName_cited_referenced_graph = None
 paperInfoPath = None
 level = 0
+current_os = None
 
 
 def write_paperInfo(paperId,title,url,year,venue,citationVelocity,influentialCitationCount,citation_count):
 
     global paperInfoPath
-    paperInfoPath = '{}{}'.format(filePath,"/papers/paperData.csv")
     with open(paperInfoPath, "a", errors='replace',encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerows(
@@ -31,24 +30,33 @@ def write_paperInfo(paperId,title,url,year,venue,citationVelocity,influentialCit
 def write_citedReferencedInfo(paper,citedPaper):
 
     global fileName_cited_referenced_graph
-    fileName_cited_referenced_graph = '{}{}'.format(filePath, "/papers/citedReferenced.csv")
     with open(fileName_cited_referenced_graph, "a", errors='replace',encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerows(
             zip([paper], [citedPaper]))
 
-def createDirectries():
+def createDirectries(baseName="ResearchPapers"):
 
-    global filePath, fileName_cited_referenced_graph, paperInfoPath
+    global filePath, fileName_cited_referenced_graph, paperInfoPath,current_os
 
     dirPath = os.path.dirname(os.path.realpath(__file__))
 
     current_os =  platform.system()
 
     if current_os == 'Linux' or current_os == 'Darwin':
-        filePath = dirPath+'/ResearchPapers'
+        filePath = dirPath+'/'+baseName
+        paperFilePath = dirPath + '/' + baseName + '/papers'
+        jsonFilePath = dirPath + '/' + baseName + '/json'
+        paperInfoPath = '{}{}'.format(filePath, "/papers/paperData.csv")
+        fileName_cited_referenced_graph = '{}{}'.format(filePath, "/papers/citedReferenced.csv")
+
+
     elif current_os == 'Windows':
-        filePath = dirPath+'\ResearchPapers'
+        filePath = dirPath+'\\'+ baseName
+        paperFilePath = dirPath + '\\' + baseName + '\papers'
+        jsonFilePath = dirPath + '\\' + baseName + '\json'
+        paperInfoPath = '{}{}'.format(filePath, "\papers\paperData.csv")
+        fileName_cited_referenced_graph = '{}{}'.format(filePath, "\papers\citedReferenced.csv")
 
     if os.path.exists(filePath):
         print("deleting existing directory")
@@ -58,27 +66,15 @@ def createDirectries():
         print("path doesn't exist. creating..")
         os.makedirs(filePath)
 
-
-    if current_os == 'Linux' or current_os == 'Darwin' :
-        paperFilePath = dirPath+'/ResearchPapers/papers'
-    elif current_os == 'Windows':
-        paperFilePath = dirPath+'\ResearchPapers\papers'
-
-
     if not os.path.exists(paperFilePath):
         print("path doesn't exist. creating..")
         os.makedirs(paperFilePath)
-
-    if current_os == 'Linux' or current_os == 'Darwin':
-        jsonFilePath = dirPath+'/ResearchPapers/json'
-    elif current_os == 'Windows':
-        jsonFilePath = dirPath+'\ResearchPapers\json'
-
 
 
     if not os.path.exists(jsonFilePath):
         print("path doesn't exist. creating..")
         os.makedirs(jsonFilePath)
+
 
     print("Data will be saved to: ", filePath)
 
@@ -86,7 +82,7 @@ def createDirectries():
 
 def getInfo(doi_id):
 
-    global repeat,level
+    global repeat,level,current_os
 
     for entry in doi_id:
 
@@ -117,44 +113,49 @@ def getInfo(doi_id):
 
                 all_papers[id] = title
 
-                fileName_json = '{}{}{}{}'.format(filePath, "/json/paper_", id, ".json")
+                if current_os == 'Linux' or current_os == 'Darwin':
+                    fileName_json = '{}{}{}{}'.format(filePath, "/json/paper_", id, ".json")
+                elif current_os == 'Windows':
+                    fileName_json = '{}{}{}{}'.format(filePath, "\json\paper_", id, ".json")
 
                 with open(fileName_json, 'w') as outfile:
                     json.dump(response_native, outfile)
 
                 citation_count = 0
                 citations = response_native.get('citations')
-                for citation in citations:
 
-                    citation_id = citation.get('paperId')
+                if citations is not None:
+                    for citation in citations:
 
-                    citation_count += 1
+                        citation_id = citation.get('paperId')
 
-                    citation_year = citation.get('year')
+                        citation_count += 1
 
-                    temp_paper_list.append(citation_id)
+                        citation_year = citation.get('year')
 
-                    citedPaper_id_year = str(citation_id) + "-" + str(citation_year)
+                        temp_paper_list.append(citation_id)
 
-                    write_citedReferencedInfo(paper_id_year, citedPaper_id_year)
+                        citedPaper_id_year = str(citation_id) + "-" + str(citation_year)
+
+                        write_citedReferencedInfo(paper_id_year, citedPaper_id_year)
 
                 write_paperInfo(id, title, url, year, venue, citationVelocity, influentialCitationCount, citation_count)
 
                 references = response_native.get('references')
+                if references is not None:
+                    for reference in references:
 
-                for reference in references:
+                        reference_id = reference.get('paperId')
 
-                    reference_id = reference.get('paperId')
+                        reference_year = reference.get('year')
 
-                    reference_year = reference.get('year')
+                        temp_paper_list.append(reference_id)
 
-                    temp_paper_list.append(reference_id)
+                        referencedPaper_id_year = str(reference_id) + "-" + str(reference_year)
 
-                    referencedPaper_id_year = str(reference_id) + "-" + str(reference_year)
+                        write_citedReferencedInfo(referencedPaper_id_year, paper_id_year)
 
-                    write_citedReferencedInfo(referencedPaper_id_year, paper_id_year)
-
-                print("Retrieved Information of: " + title)
+                print("Retrieved Information of: " + str(title))
 
 
                 if repeat:
@@ -169,6 +170,8 @@ def getInfo(doi_id):
                         level -= 1
 
 def addCitedPapers():
+
+    global paperInfoPath
 
     # isolating id value
     df_original = pd.read_csv(fileName_cited_referenced_graph)
@@ -196,8 +199,6 @@ def addCitedPapers():
 
     new_data.to_csv(paperInfoPath, sep='\t', encoding='utf-8')
 
-    print("Done")
-
 
 if __name__ == '__main__':
 
@@ -210,12 +211,22 @@ if __name__ == '__main__':
     print("  \_____|_|\__\__,_|\__|_|\___/|_| |_| |_|  \_\___|\__|_|  \___|_| \_/ \___|_|   ")
     print("\n")
 
-    createDirectries()
+    print("\n" + "*********************************" + "\n")
+    print("By default the papers will be saved in base folder 'ResearchPapers'." + "\n"
+          "If new base folder is given the contents willl be saved under the new folder" + "\n")
+    print("*********************************" + "\n")
+
+    response = input("Make new base folder? (y/n): ")
+    if response.lower() == "y":
+        baseName = input("Enter base folder name: ")
+        createDirectries(baseName)
+    elif response.lower() == "n":
+        createDirectries()
+    else:
+        print("Invalid Response")
 
     write_paperInfo("Paper Id","Title","URL","Year","Venue","CitationVelocity","InfluentialCitationCount","TotalCitationCount")
     write_citedReferencedInfo("Papers", "Cited Papers")
-
-    doi = []
 
     print("\n"+"*********************************"+ "\n")
     print("To enter DOIs, type in the DOI and press 'space bar'." + "\n"
@@ -228,3 +239,4 @@ if __name__ == '__main__':
 
     getInfo(doi)
     addCitedPapers()
+    print("Done")
