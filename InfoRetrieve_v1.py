@@ -11,6 +11,7 @@ import shutil
 #global variables
 repeat = True
 all_papers = {}
+citedReferencedPapers = {}
 filePath = None
 fileName_cited_referenced_graph = None
 paperInfoPath = None
@@ -93,9 +94,13 @@ def getInfo(doi_id):
 
             temp_paper_list = []
 
-            url = '{}{}'.format("http://api.semanticscholar.org/v1/paper/", entry)
-            response = requests.get(url)
-            response_native = json.loads(response.text)
+            try:
+                url = '{}{}'.format("http://api.semanticscholar.org/v1/paper/", entry)
+                response = requests.get(url)
+                response_native = json.loads(response.text)
+
+            except ValueError:
+                print('Decoding JSON has failed')
 
             if response_native.get('error') == "Paper not found":
                 print("Paper not found. This can be due to a wrong input.")
@@ -124,20 +129,28 @@ def getInfo(doi_id):
                 citation_count = 0
                 citations = response_native.get('citations')
 
+
                 if citations is not None:
                     for citation in citations:
 
                         citation_id = citation.get('paperId')
 
-                        citation_count += 1
+                        if citation_id in citedReferencedPapers:
+                            continue
+                        else:
+                            citation_count += 1
 
-                        citation_year = citation.get('year')
+                            citationTitle = citation.get('title')
 
-                        temp_paper_list.append(citation_id)
+                            citation_year = citation.get('year')
 
-                        citedPaper_id_year = str(citation_id) + "-" + str(citation_year)
+                            temp_paper_list.append(citation_id)
 
-                        write_citedReferencedInfo(paper_id_year, citedPaper_id_year)
+                            citedPaper_id_year = str(citation_id) + "-" + str(citation_year)
+
+                            write_citedReferencedInfo(paper_id_year, citedPaper_id_year)
+
+                            citedReferencedPapers[citation_id] = citationTitle
 
                 write_paperInfo(id, title, url, year, venue, citationVelocity, influentialCitationCount, citation_count)
 
@@ -147,13 +160,20 @@ def getInfo(doi_id):
 
                         reference_id = reference.get('paperId')
 
-                        reference_year = reference.get('year')
+                        if reference_id in citedReferencedPapers:
+                            continue;
+                        else:
+                            referenceTitle = reference.get('title')
 
-                        temp_paper_list.append(reference_id)
+                            reference_year = reference.get('year')
 
-                        referencedPaper_id_year = str(reference_id) + "-" + str(reference_year)
+                            temp_paper_list.append(reference_id)
 
-                        write_citedReferencedInfo(referencedPaper_id_year, paper_id_year)
+                            referencedPaper_id_year = str(reference_id) + "-" + str(reference_year)
+
+                            write_citedReferencedInfo(referencedPaper_id_year, paper_id_year)
+
+                            citedReferencedPapers[reference_id] = referenceTitle
 
                 print("Retrieved Information of: " + str(title))
 
@@ -195,9 +215,11 @@ def addCitedPapers():
     # convert to int
     new_data['Cited Papers'] = new_data['Cited Papers'].astype(int)
 
+    new_data.sort_values([7],ascending=False)
+
     os.remove(paperInfoPath)
 
-    new_data.to_csv(paperInfoPath, sep='\t', encoding='utf-8')
+    new_data.to_csv(paperInfoPath, sep=',', encoding='utf-8')
 
 
 if __name__ == '__main__':
@@ -240,3 +262,4 @@ if __name__ == '__main__':
     getInfo(doi)
     addCitedPapers()
     print("Done")
+
