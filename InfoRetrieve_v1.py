@@ -215,7 +215,7 @@ def addCitedPapers():
     # convert to int
     new_data['Cited Papers'] = new_data['Cited Papers'].astype(int)
 
-    new_data.sort_values('Cited Papers',ascending=False)
+    new_data.sort_values('Cited Papers',ascending=False,inplace=True)
 
     os.remove(paperInfoPath)
 
